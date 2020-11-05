@@ -1,0 +1,16 @@
+#index:
+#    path: /
+#    controller: App\Controller\SecurityController::index
+
+api_graphql_entrypoint:
+    path: /graphql
+    controller: api_platform.graphql.action.entrypoint
+
+swagger_ui:
+    path: /docs
+    controller: api_platform.swagger.action.ui
+
+_liip_imagine:
+    resource: "@LiipImagineBundle/Resources/config/routing.yaml"
+
+

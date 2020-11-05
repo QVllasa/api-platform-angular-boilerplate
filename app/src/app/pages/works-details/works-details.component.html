@@ -1,0 +1,67 @@
+<!-- Start Main Container Area -->
+
+
+<div id="main-content" class="main-content" *ngIf="!isLoading">
+
+
+    <section class="works-details-area bg-0f1d22 ptb-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5 col-md-12 ">
+                    <div class="contact-content">
+                        <div class="d-table bg-0f1d22">
+                            <div class="d-table-cell">
+                                <div @scaleFadeIn class="section-title">
+                                    <h2>{{project.title}}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="works-details-image">
+                        <img [src]="serverPath+project.contentUrl" alt="projects">
+
+                        <!--<a href="../../../assets/img/blog/img2.jpg" class="popup-btn"><i class="ri-add-line"></i></a>-->
+                    </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12">
+                    <div class="works-details-desc">
+                        <p>{{project.description}}</p>
+
+                        <div class="features-text" *ngFor="let key of project.keys">
+                            <h4><i class="ri-check-line"></i> {{key}}</h4>
+                        </div>
+
+                        <div class="works-details-info">
+                            <div class="single-info-box">
+                                <h4>Client</h4>
+                                <span *ngIf="!project.client">My own Project</span>
+                                <span *ngIf="project.client">{{project.client.name}}</span>
+                            </div>
+
+                            <div class="single-info-box">
+                                <h4>Category</h4>
+                                <span *ngFor="let cat of project.category.edges">{{cat.node.title}}</span>
+                            </div>
+
+                            <div class="single-info-box">
+                                <h4>Date</h4>
+                                <span>{{project.finishedAt ? project.finishedAt : 'ongoing'  | date}}</span>
+                            </div>
+
+                            <div class="single-info-box">
+                                <a href="#" class="default-btn">Live Preview</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <app-footer></app-footer>
+</div>
+
+<!-- End Main Container Area -->

@@ -1,0 +1,39 @@
+
+<div id="main-content" class="main-content" *ngIf="!isLoading">
+
+
+    <section class="services-details-area bg-0f1d22 ptb-120">
+        <div class="container">
+            <div @scaleFadeIn class="section-title pb-90">
+                <h2 >{{service.service.pageTitle}}</h2>
+            </div>
+            <div class="services-details-overview" *ngFor="let section of sections; index as i">
+                <div @fadeInRight *ngIf="isEven(i)" class="services-details-image">
+                    <img  [src]="serverPath+section.contentUrl" alt="image">
+                </div>
+                <div @fadeInLeft *ngIf="isEven(i)" class="services-details-desc">
+                    <h3>{{section.title}}</h3>
+                    <p *ngIf="section.description" >{{section.description}}</p>
+                    <div class="features-text" *ngFor="let key of section.keys" >
+                        <h4><i class="ri-check-line"></i>{{key}}</h4>
+                    </div>
+                </div>
+                <div @fadeInRight *ngIf="!isEven(i)" class="services-details-desc">
+                    <h3>{{section.title}}</h3>
+                    <p *ngIf="section.description" >{{section.description}}</p>
+                    <div class="features-text" *ngFor="let key of section.keys" >
+                        <h4><i class="ri-check-line"></i>{{key}}</h4>
+                    </div>
+                </div>
+                <div @fadeInLeft *ngIf="!isEven(i)" class="services-details-image">
+                    <img [src]="serverPath+section.contentUrl" alt="image">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+   <app-footer></app-footer>
+</div>
+
+

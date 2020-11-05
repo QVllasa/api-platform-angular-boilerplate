@@ -1,0 +1,98 @@
+version: '3.4'
+
+
+services:
+  php:
+    container_name: php
+    restart: always
+    build:
+      context: ./api
+      target: api_platform_php
+    healthcheck:
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - db
+      - dev-tls
+    volumes:
+      - ./api:/srv/api:rw,cached
+      - ./api/docker/php/conf.d/api-platform.dev.ini:/usr/local/etc/php/conf.d/api-platform.ini
+      - dev-certs:/certs:ro,nocopy
+
+  api:
+    container_name: api
+    build:
+      context: ./api
+      target: api_platform_nginx
+    depends_on:
+      - php
+    volumes:
+      - ./api/public:/srv/api/public:ro
+
+  vulcain:
+    container_name: vulcain
+    image: dunglas/vulcain
+    environment:
+      - CERT_FILE=/certs/localhost.crt
+      - KEY_FILE=/certs/localhost.key
+      - UPSTREAM=http://api
+    depends_on:
+      - api
+      - dev-tls
+    volumes:
+      - dev-certs:/certs:ro,nocopy
+    ports:
+      - target: 443
+        published: 8443
+        protocol: tcp
+
+  db:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_DB=api
+      - POSTGRES_PASSWORD=!CHANGEME!
+      - POSTGRES_USER=admin
+    volumes:
+      - ./api/docker/db/data:/var/lib/postgresql/data:rw
+    ports:
+      - target: 5432
+        published: 5432
+        protocol: tcp
+
+
+
+  app:
+    container_name: app
+    build:
+      context: ./app
+      args:
+        - NODE_VERSION=13
+        - NGINX_VERSION=1.17
+      target: api_platform_app_development
+    tty: true # https://github.com/facebook/create-react-app/issues/8688
+    depends_on:
+      - dev-tls
+    volumes:
+      - ./app:/usr/src/app:rw,cached
+      - dev-certs:/usr/src/app/node_modules/webpack-dev-server/ssl:rw,nocopy
+    ports:
+      - target: 4200
+        published: 447
+        protocol: tcp
+
+  dev-tls:
+    container_name: START
+    build:
+      context: ./docker/dev-tls
+    volumes:
+      - dev-certs:/certs:rw
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+
+volumes:
+  db-data: {}
+  dev-certs: {}

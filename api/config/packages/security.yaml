@@ -1,0 +1,32 @@
+security:
+    enable_authenticator_manager: true
+    encoders:
+        Symfony\Component\Security\Core\User\User: 'auto'
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        backend_users:
+            memory:
+                users:
+                    admin: { password: '!ChangeMe!' , 
+                             roles: ['ROLE_ADMIN'] }
+                    
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: backend_users
+            entry_point: form_login
+            form_login:
+                login_path: app_login
+                check_path: app_login
+            logout:
+                path: app_logout
+                target: app_login
+
+
+    access_control:
+         - { path: ^/admin, roles: ROLE_ADMIN}
+        # - { path: ^/profile, roles: ROLE_USER }
